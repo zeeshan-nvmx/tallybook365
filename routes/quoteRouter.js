@@ -3,7 +3,7 @@ const { createQuote, getAllQuotes, getQuote, deleteQuote, updateQuote } = requir
 const { authenticateUser, authorizeUser } = require('../utils/authorize-authenticate')
 const quoteRouter = express.Router()
 
-quoteRouter.post("/quotes", authenticateUser, authorizeUser, createQuote)
+quoteRouter.post("/quotes", authenticateUser, createQuote)
 quoteRouter.get("/quotes", authenticateUser, getAllQuotes)
 quoteRouter.get("/quotes/:id", authenticateUser, getQuote)
 quoteRouter.delete("/quotes/:id", authenticateUser, deleteQuote)

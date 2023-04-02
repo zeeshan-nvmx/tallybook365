@@ -4,14 +4,14 @@ const NotFoundError = require("../errors/not-found");
 
 async function createClient(req, res) {
   const {
-    client_id,
+    mother_company,
     client_name,
     client_address,
     client_contact_no,
-    client_representitive1,
-    client_representitive1_no,
-    client_representitive2,
-    client_representitive2_no,
+    client_representative1,
+    client_representative1_no,
+    client_representative2,
+    client_representative2_no,
     bank_account,
     bank_name_address,
     swift,
@@ -19,14 +19,14 @@ async function createClient(req, res) {
   } = req.body
 
   const client = await Client.create({
-    client_id,
+    mother_company,
     client_name,
     client_address,
     client_contact_no,
-    client_representitive1,
-    client_representitive1_no,
-    client_representitive2,
-    client_representitive2_no,
+    client_representative1,
+    client_representative1_no,
+    client_representative2,
+    client_representative2_no,
     bank_account,
     bank_name_address,
     swift,
@@ -44,7 +44,9 @@ async function createClient(req, res) {
 
 async function getAllClients(req, res) {
 
-    const clients = await Client.find({})
+  const userExtractedCompany = req.user.company
+
+    const clients = await Client.find({ mother_company: userExtractedCompany })
     if (clients) {
       return res.status(200).json(clients)
     }
@@ -54,8 +56,9 @@ async function getAllClients(req, res) {
 
 async function getClient(req, res) {
   const { id } = req.params
+  const userExtractedCompany = req.user.company
   console.log(typeof id)
-  const client = await Client.findOne({ client_id: id })
+  const client = await Client.findOne({ _id: id, mother_company: userExtractedCompany })
   
   if (client) {
     return res.status(200).json(client)
@@ -65,8 +68,8 @@ async function getClient(req, res) {
 
 async function updateClient(req, res) {
   const { id } = req.params
-
-  const client = await Client.findOneAndUpdate({ client_id: id }, req.body, { new: true })
+  const userExtractedCompany = req.user.company
+  const client = await Client.findOneAndUpdate({ _id: id, mother_company: userExtractedCompany }, req.body, { new: true })
 
   if (client) {
     return res.status(200).json({ msg: "client successfully updated", data: client })
@@ -76,8 +79,9 @@ async function updateClient(req, res) {
 
 async function deleteClient(req, res) {
   const { id } = req.params
+  const userExtractedCompany = req.user.company
   console.log(typeof id)
-  const client = await Client.findOneAndDelete({ client_id: id })
+  const client = await Client.findOneAndDelete({ _id: id, mother_company: userExtractedCompany })
 
   if (client) {
     return res.status(200).json({ msg: "client deleted", data: client })

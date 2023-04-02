@@ -1,10 +1,9 @@
 const mongoose = require("mongoose")
 
 const clientSchema = new mongoose.Schema({
-  client_id: {
+  mother_company: {
     type: String,
-    unique: true,
-    required: [true, "user id is missing"],
+    required: true
   },
   client_name: {
     type: String,
@@ -17,18 +16,18 @@ const clientSchema = new mongoose.Schema({
     type: String,
     required: [true, "client contact no is missing"],
   },
-  client_representitive1: {
+  client_representative1: {
     type: String,
-    required: [true, "representitive is missing, atleast need to add one representative"],
+    required: [true, "representative is missing, atleast need to add one representative"],
   },
-  client_representitive1_no: {
+  client_representative1_no: {
     type: String,
-    required: [true, "representitive is missing, atleast need to add one representative contact no"],
+    required: [true, "representative is missing, atleast need to add one representative contact no"],
   },
-  client_representitive2: {
+  client_representative2: {
     type: String,
   },
-  client_representitive2_no: {
+  client_representative2_no: {
     type: String,
   },
   bank_account: {
