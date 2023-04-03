@@ -5,7 +5,7 @@ const { createJWT } = require('../utils/jwt');
 const { hashPassword, comparePassword } = require('../utils/password')
 
 async function register(req, res) {
-  const { name, email, password, company } = req.body;
+  const { name, email, password, mother_company } = req.body;
   
   const userExists = await User.findOne({ email })
   if (userExists) {
@@ -17,12 +17,12 @@ async function register(req, res) {
   }
 
   const hashedPassword = await hashPassword(password); 
-  const user = await User.create({ name, email, company, password: hashedPassword }); 
+  const user = await User.create({ name, email, mother_company, password: hashedPassword }); 
   
-  const tokenUser = { name: user.name, role: user.role, email: user.email, company: user.company, id: user._id }; 
+  const tokenUser = { name: user.name, role: user.role, email: user.email, mother_company: user.mother_company, user_id: user._id }; 
   const token = await createJWT(tokenUser);
   // await attachCookies(res, token)
-  res.status(201).json({ token, msg: `New user under company: ${user.company} successfully registered`, user: tokenUser }); 
+  res.status(201).json({ token, msg: `New user under company: ${user.mother_company} successfully registered`, user: tokenUser }); 
 }
 
 async function login(req, res) {
@@ -38,8 +38,8 @@ async function login(req, res) {
     throw new BadRequestError("user with this email doesn't exist")
   }
 
-  const tokenUser = { id: storedUser._id, name: storedUser.name, role: storedUser.role, company: storedUser.company, email: storedUser.email };
-
+  const tokenUser = { user_id: storedUser._id, name: storedUser.name, role: storedUser.role, mother_company: storedUser.mother_company, email: storedUser.email };
+  console.log(tokenUser);
   const isPasswordCorrect = await comparePassword(password, storedUser.password);
 
   if (isPasswordCorrect) {

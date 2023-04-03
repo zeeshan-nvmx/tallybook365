@@ -20,15 +20,15 @@ const UserSchema = new mongoose.Schema({
     required: [true, "please provide a password"],
     minlength: 6,
   },
-  company: {
+  mother_company: {
     type: String,
     default: 'sassDefault-company'
   },
   role: {
     type: String,
-    enum: ["sass-admin", "system-admin", "base-admin", "user"],
+    enum: ["sass-admin", "admin", "user"],
     default: "user",
   }
-})
+}, {timestamps: true})
 
 module.exports = mongoose.model('User', UserSchema)

@@ -44,7 +44,7 @@ async function createClient(req, res) {
 
 async function getAllClients(req, res) {
 
-  const userExtractedCompany = req.user.company
+  const userExtractedCompany = req.user.mother_company
 
     const clients = await Client.find({ mother_company: userExtractedCompany })
     if (clients) {
@@ -56,7 +56,7 @@ async function getAllClients(req, res) {
 
 async function getClient(req, res) {
   const { id } = req.params
-  const userExtractedCompany = req.user.company
+  const userExtractedCompany = req.user.mother_company
   console.log(typeof id)
   const client = await Client.findOne({ _id: id, mother_company: userExtractedCompany })
   
@@ -68,7 +68,7 @@ async function getClient(req, res) {
 
 async function updateClient(req, res) {
   const { id } = req.params
-  const userExtractedCompany = req.user.company
+  const userExtractedCompany = req.user.mother_company
   const client = await Client.findOneAndUpdate({ _id: id, mother_company: userExtractedCompany }, req.body, { new: true })
 
   if (client) {
@@ -79,7 +79,7 @@ async function updateClient(req, res) {
 
 async function deleteClient(req, res) {
   const { id } = req.params
-  const userExtractedCompany = req.user.company
+  const userExtractedCompany = req.user.mother_company
   console.log(typeof id)
   const client = await Client.findOneAndDelete({ _id: id, mother_company: userExtractedCompany })
 
