@@ -10,15 +10,19 @@ const mongoSanitize = require("express-mongo-sanitize")
 require('dotenv').config()
 
 const authRouter = require('./routes/authRouter')
+const companyRouter = require('./routes/companyRouter')
 const clientRouter = require("./routes/clientRouter")
 const quoteRouter = require("./routes/quoteRouter")
 const invoiceRouter = require("./routes/invoiceRouter")
+const chalanRouter = require('./routes/chalanRouter')
+const workorderRouter = require('./routes/workorderRouter')
+
+
+
 const connectDB = require('./utils/db')
 const errorHandler = require('./utils/error-handler')
 const { authenticateUser } = require('./utils/authorize-authenticate')
 const notFoundError = require('./utils/not-found-404')
-const chalanRouter = require('./routes/chalanRouter')
-const workorderRouter = require('./routes/workorderRouter')
 
 
 
@@ -33,7 +37,10 @@ app.use(express.json())
 app.get('/showme', authenticateUser, (req, res) => {
   res.json(req.user)
 })
+
+
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1', companyRouter)
 app.use("/api/v1", clientRouter)
 app.use("/api/v1", quoteRouter)
 app.use("/api/v1", invoiceRouter)

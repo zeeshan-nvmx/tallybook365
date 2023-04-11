@@ -40,8 +40,7 @@ const quoteSchema = new mongoose.Schema(
       required: [true, 'quote title is missing.'],
     },
     job_no: {
-      type: Number,
-      unique: true,
+      type: String,
       required: [true, 'job_no is missing.'],
     },
     brand: {

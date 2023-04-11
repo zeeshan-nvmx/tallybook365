@@ -1,13 +1,24 @@
 const mongoose = require("mongoose")
 
-const workorderSchema = new mongoose.Schema(
+const purchaseOrderSchema = new mongoose.Schema(
   {
     user_id: {
-      type: String,
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
       required: [true, 'user id is missing.'],
     },
-    client_id: {
+    quote_id: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Quote',
+      required: [true, 'quote id is missing.'],
+    },
+    mother_company: {
       type: String,
+      required: [true, 'mother company is missing.'],
+    },
+    client_id: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Client',
       required: [true, 'client id is missing.'],
     },
     client_name: {
@@ -19,11 +30,10 @@ const workorderSchema = new mongoose.Schema(
     },
     title: {
       type: String,
-      required: [true, 'workorder title is missing.'],
+      required: [true, 'purchaseOrder title is missing.'],
     },
     job_no: {
-      type: Number,
-      unique: true,
+      type: String,
       required: [true, 'job_no is missing.'],
     },
     brand: {
@@ -66,6 +76,8 @@ const workorderSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'grand total value is missing'],
     },
-  }, { timestamps: true })
+  },
+  { timestamps: true }
+)
 
-module.exports = mongoose.model("WorkOrder", workorderSchema)
+module.exports = mongoose.model("PurchaseOrder", purchaseOrderSchema)

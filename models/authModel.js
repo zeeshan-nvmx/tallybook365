@@ -22,7 +22,6 @@ const UserSchema = new mongoose.Schema({
   },
   mother_company: {
     type: String,
-    default: 'sassDefault-company'
   },
   role: {
     type: String,

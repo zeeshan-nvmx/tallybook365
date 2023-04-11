@@ -1,11 +1,12 @@
 const BadRequestError = require('../errors/bad-request');
 const User = require('../models/authModel');
+const Company = require('../models/companyModel')
 // const attachCookies = require('../utils/cookies');
 const { createJWT } = require('../utils/jwt');
 const { hashPassword, comparePassword } = require('../utils/password')
 
 async function register(req, res) {
-  const { name, email, password, mother_company } = req.body;
+  const { name, email, password, mother_company, role } = req.body;
   
   const userExists = await User.findOne({ email })
   if (userExists) {
@@ -16,10 +17,17 @@ async function register(req, res) {
     throw new BadRequestError("please provide all necessary fields")
   }
 
-  const hashedPassword = await hashPassword(password); 
-  const user = await User.create({ name, email, mother_company, password: hashedPassword }); 
+  const company = await Company.findOne({ mother_company })
   
-  const tokenUser = { name: user.name, role: user.role, email: user.email, mother_company: user.mother_company, user_id: user._id }; 
+  console.log(company)
+  if (!company) {
+    throw new BadRequestError("company doesn't exist")
+  }
+
+  const hashedPassword = await hashPassword(password); 
+  const user = await User.create({ name, email, mother_company, role, password: hashedPassword, company }); 
+  
+  const tokenUser = { user_id: user._id, name: user.name, role: user.role, email: user.email, mother_company: user.mother_company, company }; 
   const token = await createJWT(tokenUser);
   // await attachCookies(res, token)
   res.status(201).json({ token, msg: `New user under company: ${user.mother_company} successfully registered`, user: tokenUser }); 
@@ -33,12 +41,18 @@ async function login(req, res) {
   }
 
   const storedUser = await User.findOne({ email });
-  console.log(storedUser);
   if (!storedUser) {
     throw new BadRequestError("user with this email doesn't exist")
   }
 
-  const tokenUser = { user_id: storedUser._id, name: storedUser.name, role: storedUser.role, mother_company: storedUser.mother_company, email: storedUser.email };
+  const mother_company = storedUser.mother_company
+  const company = await Company.findOne({ mother_company })
+
+  if (!company) {
+    throw new BadRequestError("company doesn't exist")
+  }
+
+  const tokenUser = { user_id: storedUser._id, name: storedUser.name, role: storedUser.role, mother_company: storedUser.mother_company, email: storedUser.email, company };
   console.log(tokenUser);
   const isPasswordCorrect = await comparePassword(password, storedUser.password);
 

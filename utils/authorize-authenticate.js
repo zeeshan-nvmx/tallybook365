@@ -15,8 +15,8 @@ async function authenticateUser(req, res, next) {
   try {
     const verifiedToken = await verifyToken(token)
     console.log(verifiedToken);
-    const { user_id, name, role, email, mother_company } = verifiedToken
-    req.user = { user_id, name, role, mother_company, email }
+    const { user_id, name, role, email, mother_company, company } = verifiedToken
+    req.user = { user_id, name, role, mother_company, email, company }
     next()
   } catch (error) {
     throw new UnauthenticatedError("Authentication token is invalid")
@@ -25,7 +25,9 @@ async function authenticateUser(req, res, next) {
 }
 
 function authorizeUser(...roles){
-  return function(req, res, next){
+  return function (req, res, next) {
+    console.log(roles)
+    console.log(req.user)
     if (!roles.includes(req.user.role)) {
       throw new UnauthorizedError('Unauthorized to access this route')
     }

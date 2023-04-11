@@ -3,12 +3,23 @@ const mongoose = require("mongoose")
 const invoiceSchema = new mongoose.Schema(
   {
     user_id: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'user id is missing.'],
+    },
+    quote_id: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Quote',
+      required: [true, 'quote id is missing.'],
+    },
+    mother_company: {
       type: String,
-      required: [true, 'user id is missing'],
+      required: [true, 'mother company is missing.'],
     },
     client_id: {
-      type: String,
-      required: [true, 'client id is missing'],
+      type: mongoose.Types.ObjectId,
+      ref: 'Client',
+      required: [true, 'client id is missing.'],
     },
     client_name: {
       type: String,
@@ -28,8 +39,7 @@ const invoiceSchema = new mongoose.Schema(
       type: String,
     },
     job_no: {
-      type: Number,
-      unique: true,
+      type: String,
       required: [true, 'job_no is missing'],
     },
     date: {
@@ -56,10 +66,6 @@ const invoiceSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    grand_total: {
-      type: Number,
-      required: [true, 'grand total value is missing'],
-    },
     t_and_c: {
       type: String,
     },
@@ -75,6 +81,12 @@ const invoiceSchema = new mongoose.Schema(
     routing_no: {
       type: String,
     },
-  }, { timestamps: true })
+    grand_total: {
+      type: Number,
+      required: [true, 'grand total value is missing'],
+    },
+  },
+  { timestamps: true }
+)
 
 module.exports = mongoose.model("Invoice", invoiceSchema)

@@ -130,10 +130,10 @@ async function getQuoteSerialNumber(req, res) {
 
   const quotes = await Quote.countDocuments({ createdAt: { $gte: firstDayOfMonth, $lte: lastDayOfMonth }, mother_company })
   console.log(quotes);
-  if (quotes) {
-    const serialNumber = `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${(quotes + 1).toString().padStart(3, '0')}`
-    res.status(200).json(serialNumber)
-  }
+  
+  const serialNumber = `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${(quotes + 1).toString().padStart(3, '0')}`
+  res.status(200).json(serialNumber)
+  
 }
 
 module.exports = { createQuote, getAllQuotes, getQuote, deleteQuote, updateQuote, getQuoteSerialNumber }

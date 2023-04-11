@@ -32,8 +32,7 @@ const chalanSchema = new mongoose.Schema({
     required: [true, 'chalan title is missing.'],
   },
   job_no: {
-    type: Number,
-    unique: true,
+    type: String,
     required: [true, 'job_no is missing.'],
   },
   brand: {
