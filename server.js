@@ -15,7 +15,7 @@ const clientRouter = require("./routes/clientRouter")
 const quoteRouter = require("./routes/quoteRouter")
 const invoiceRouter = require("./routes/invoiceRouter")
 const chalanRouter = require('./routes/chalanRouter')
-const workorderRouter = require('./routes/workorderRouter')
+const purchaseOrderRouter = require('./routes/purchaseOrderRouter')
 
 
 
@@ -45,7 +45,7 @@ app.use("/api/v1", clientRouter)
 app.use("/api/v1", quoteRouter)
 app.use("/api/v1", invoiceRouter)
 app.use("/api/v1", chalanRouter)
-app.use("/api/v1", workorderRouter)
+app.use("/api/v1", purchaseOrderRouter)
 
 app.use(notFoundError)
 app.use(errorHandler)

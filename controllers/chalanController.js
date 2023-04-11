@@ -74,8 +74,8 @@ async function getAllChalans(req, res) {
 
   if (role === "admin") {
     const chalans = await Chalan.find({mother_company: mother_company}).sort("-date").skip(skip).limit(limit)
-    console.log(chalans)
-    if (chalans) {
+
+    if (chalans.length > 0) {
       return res.status(200).json(chalans)
     }
     throw new NotFoundError(`chalans not found ( role is ${role})`)
@@ -83,7 +83,7 @@ async function getAllChalans(req, res) {
 
   if (role === "user") {
     const chalans = await Chalan.find({ user_id: user_id, mother_company: mother_company }).sort('-date').skip(skip).limit(limit)
-    if (chalans) {
+    if (chalans.length > 0) {
       return res.status(200).json(chalans)
     }
     throw new NotFoundError(`chalans not found ( role is ${role})`)
@@ -92,7 +92,7 @@ async function getAllChalans(req, res) {
 
 async function getChalan(req, res) {
   const { id } = req.params
-  console.log(typeof id)
+  const {mother_company} = req.user
   const chalan = await Chalan.findOne({ _id: id, mother_company: mother_company })
   console.log(chalan)
   if (chalan) {
@@ -137,12 +137,9 @@ async function getChalanSerialNumber(req, res) {
 
   const chalans = await Chalan.countDocuments({ createdAt: { $gte: firstDayOfMonth, $lte: lastDayOfMonth }, mother_company })
   
-  if (chalans) {
-    const serialNumber = `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${(chalans + 1).toString().padStart(3, '0')}`
-    res.status(200).json(serialNumber)
-  } else {
-    throw new NotFoundError('No chalans found')
-  }
+  const serialNumber = `${currentYear}-${currentMonth.toString().padStart(2, '0')}-${(chalans + 1).toString().padStart(3, '0')}`
+  res.status(200).json(serialNumber)
+  
 }
 
 module.exports = { createChalan, getAllChalans, getChalan, deleteChalan, updateChalan, getChalanSerialNumber }

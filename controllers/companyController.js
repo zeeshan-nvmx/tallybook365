@@ -68,7 +68,7 @@ async function getQuoteInvoiceSixMonthTotal(req, res) {
     const monthYearString = getMonthYearString(startOfMonth);
 
     const { totalQuoteDues, totalInvoiceDues } = await fetchMonthlyDues(startOfMonth, endOfMonth);
-    results.push(`${monthYearString} - Total quote amount - ${totalQuoteDues} - Total Invoice amount - ${totalInvoiceDues}`);
+    results.push(`${monthYearString} - Total quoted amount - ${totalQuoteDues} - Total Invoiced amount - ${totalInvoiceDues}`);
   }
 
   return results;
@@ -79,12 +79,13 @@ async function getQuoteInvoiceSixMonthTotal(req, res) {
     const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
     const currentMonthDues = await fetchMonthlyDues(startOfMonth, endOfMonth);
-    console.log(`Current month (${getMonthYearString(startOfMonth)}) quote dues: ${currentMonthDues.totalQuoteDues}`);
-    console.log(`Current month (${getMonthYearString(startOfMonth)}) invoice dues: ${currentMonthDues.totalInvoiceDues}`);
+    const runningMonthQuoteTotal = `Current running month (${getMonthYearString(startOfMonth)}) total quoted amount is: ${currentMonthDues.totalQuoteDues}`;
+    const runningMonthInvoiceTotal = `Current running month (${getMonthYearString(startOfMonth)}) total invoiced amount is: ${currentMonthDues.totalInvoiceDues}`;
 
-    console.log('\nLast six months dues:');
     const lastSixMonthsDues = await getLastSixMonthsDues();
-    lastSixMonthsDues.forEach((result) => console.log(result));
+    // lastSixMonthsDues.forEach((result) => console.log(result));
+
+    res.status(200).json({runningMonthQuoteTotal, runningMonthInvoiceTotal, lastSixMonthsDues})
   } catch (error) {
     console.error('Error fetching dues:', error);
   }
