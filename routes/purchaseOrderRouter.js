@@ -13,7 +13,7 @@ const purchaseOrderRouter = express.Router()
 
 purchaseOrderRouter.get('/purchaseorders/getpurchaseorderserialnumber', authenticateUser, getPurchaseOrderSerialNumber)
 purchaseOrderRouter.post('/purchaseorders', authenticateUser, createPurchaseOrder)
-purchaseOrderRouter.post('/purchaseorders/getpurchaseordersbyquote', authenticateUser, getPurchaseOrdersByQuote)
+purchaseOrderRouter.get('/purchaseorders/getpurchaseordersbyquote/:id', authenticateUser, getPurchaseOrdersByQuote)
 purchaseOrderRouter.get('/purchaseorders', authenticateUser, getAllPurchaseOrders)
 purchaseOrderRouter.get('/purchaseorders/:id', authenticateUser, getPurchaseOrder)
 purchaseOrderRouter.delete('/purchaseorders/:id', authenticateUser, deletePurchaseOrder)

@@ -140,7 +140,7 @@ async function getPurchaseOrderSerialNumber(req, res) {
 }
 
 async function getPurchaseOrdersByQuote(req, res) {
-  const { quote_id } = req.body
+  const quote_id  = req.params.id
 
   const purchaseOrders = await PurchaseOrder.find({ quote_id })
 
