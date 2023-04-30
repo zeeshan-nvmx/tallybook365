@@ -72,16 +72,17 @@ async function getAllPurchaseOrders(req, res) {
   const skip = (page - 1) * limit
 
   if (role === "admin") {
-    const purchaseOrders = await purchaseOrder.find({ mother_company: mother_company }).sort('-date').skip(skip).limit(limit)
-    if (purchaseOrders > 0) {
+    const purchaseOrders = await PurchaseOrder.find({ mother_company: mother_company }).sort('-date').skip(skip).limit(limit)
+
+    if (purchaseOrders.length > 0) {
       return res.status(200).json(purchaseOrders)
     }
     throw new NotFoundError(`purchaseOrders not found ( role is ${role})`)
   }
 
   if (role === "user") {
-    const purchaseOrders = await purchaseOrder.find({ user_id: user_id, mother_company: mother_company }).sort('-date').skip(skip).limit(limit)
-    if (purchaseOrders > 0) {
+    const purchaseOrders = await PurchaseOrder.find({ user_id: user_id, mother_company: mother_company }).sort('-date').skip(skip).limit(limit)
+    if (purchaseOrders.length > 0) {
       return res.status(200).json(purchaseOrders)
     }
     throw new NotFoundError(`purchaseOrders not found ( role is ${role})`)
@@ -91,7 +92,7 @@ async function getAllPurchaseOrders(req, res) {
 async function getPurchaseOrder(req, res) {
   const { id } = req.params
   const {mother_company} = req.user
-  const purchaseOrder = await purchaseOrder.findOne({ _id: id, mother_company: mother_company })
+  const purchaseOrder = await PurchaseOrder.findOne({ _id: id, mother_company: mother_company })
   console.log(purchaseOrder)
   if (purchaseOrder) {
     return res.status(200).json(purchaseOrder)
@@ -104,7 +105,7 @@ async function updatePurchaseOrder(req, res) {
 
   const { mother_company } = req.user
 
-  const purchaseOrder = await purchaseOrder.findOneAndUpdate({ _id: id, mother_company: mother_company }, req.body, { new: true })
+  const purchaseOrder = await PurchaseOrder.findOneAndUpdate({ _id: id, mother_company: mother_company }, req.body, { new: true })
 
   if (purchaseOrder) {
     return res.status(200).json({ msg: "purchaseOrder successfully updated", data: purchaseOrder })
@@ -115,7 +116,7 @@ async function updatePurchaseOrder(req, res) {
 async function deletePurchaseOrder(req, res) {
   const { id } = req.params
   const { mother_company } = req.user
-  const purchaseOrder = await purchaseOrder.findOneAndDelete({ _id: id, mother_company: mother_company })
+  const purchaseOrder = await PurchaseOrder.findOneAndDelete({ _id: id, mother_company: mother_company })
 
   if (purchaseOrder) {
     return res.status(200).json({ msg: "purchaseOrder deleted", data: purchaseOrder })
@@ -138,4 +139,25 @@ async function getPurchaseOrderSerialNumber(req, res) {
   res.status(200).json(serialNumber)
 }
 
-module.exports = { createPurchaseOrder, getAllPurchaseOrders, getPurchaseOrder, deletePurchaseOrder, updatePurchaseOrder, getPurchaseOrderSerialNumber }
+async function getPurchaseOrdersByQuote(req, res) {
+  const { quote_id } = req.body
+
+  const purchaseOrders = await PurchaseOrder.find({ quote_id })
+
+  if (purchaseOrders.length > 0) {
+    return res.status(200).json(purchaseOrders)
+  }
+  throw new NotFoundError(`purchaseOrders not found or quote doesn't have a purchaseorder yet`)
+
+}
+
+
+module.exports = {
+  createPurchaseOrder,
+  getAllPurchaseOrders,
+  getPurchaseOrder,
+  deletePurchaseOrder,
+  updatePurchaseOrder,
+  getPurchaseOrderSerialNumber,
+  getPurchaseOrdersByQuote,
+}

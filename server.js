@@ -34,7 +34,7 @@ app.use(morgan('dev'))
 app.use(express.json())
 
 
-app.get('/showme', authenticateUser, (req, res) => {
+app.get('/api/v1/showme', authenticateUser, (req, res) => {
   res.json(req.user)
 })
 

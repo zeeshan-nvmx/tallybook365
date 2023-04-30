@@ -3,7 +3,7 @@ const { createChalan, getAllChalans, getChalan, deleteChalan, updateChalan, getC
 const { authenticateUser, authorizeUser} = require("../utils/authorize-authenticate")
 const chalanRouter = express.Router()
 
-chalanRouter.post('/chalans/getchalanserialnumber', authenticateUser, getChalanSerialNumber)
+chalanRouter.get('/chalans/getchalanserialnumber', authenticateUser, getChalanSerialNumber)
 chalanRouter.post("/chalans", authenticateUser, createChalan)
 chalanRouter.get("/chalans", authenticateUser, getAllChalans)
 chalanRouter.get("/chalans/:id", authenticateUser, getChalan)

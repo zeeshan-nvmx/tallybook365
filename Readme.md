@@ -10,4 +10,4 @@
    - JWT_SECRET
    - EXPIRY
 
-Done! now try registering users and do your agency thing!
+Done! 
