@@ -86,8 +86,8 @@ async function getQuoteInvoiceSixMonthTotal(req, res) {
     const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
     const currentMonthDues = await fetchMonthlyDues(startOfMonth, endOfMonth);
-    const runningMonthQuoteTotal = { [getMonthYearString(startOfMonth)] : currentMonthDues.totalQuoteDues };
-    const runningMonthInvoiceTotal = { [getMonthYearString(startOfMonth)]: currentMonthDues.totalInvoiceDues };
+    const runningMonthQuoteTotal = { "currentMonth" : getMonthYearString(startOfMonth), "total quoted amount" : currentMonthDues.totalQuoteDues };
+    const runningMonthInvoiceTotal = { "currentMonth" : getMonthYearString(startOfMonth), "total invoice amount" : currentMonthDues.totalInvoiceDues };
 
     const lastSixMonthsDues = await getLastSixMonthsDues();
     // lastSixMonthsDues.forEach((result) => console.log(result));
