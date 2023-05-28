@@ -86,6 +86,33 @@ async function getAllQuotes(req, res) {
   }
 }
 
+async function getQuotesByMonth(req, res) {
+  try {
+    const { month, year } = req.query
+
+    if (!month || !year) {
+      return res.status(400).json({ message: 'Both month and year are required query parameters.' })
+    }
+
+    // JavaScript counts months from 0 (January) to 11 (December),
+    // so we subtract 1 from the provided month to account for this.
+    let startDate = new Date(year, month - 1, 1)
+    let endDate = new Date(year, month, 0) // This date doesn't exist, so it will roll over to the first day of the next month
+
+    let quotes = await Quote.find({
+      createdAt: {
+        $gte: startDate,
+        $lt: endDate,
+      },
+    })
+
+    res.json(quotes)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Server error' })
+  }
+}
+
 async function getQuote(req, res) {
   const { id } = req.params
   console.log(typeof(id));
@@ -136,4 +163,4 @@ async function getQuoteSerialNumber(req, res) {
   
 }
 
-module.exports = { createQuote, getAllQuotes, getQuote, deleteQuote, updateQuote, getQuoteSerialNumber }
+module.exports = { createQuote, getAllQuotes, getQuotesByMonth, getQuote, deleteQuote, updateQuote, getQuoteSerialNumber }

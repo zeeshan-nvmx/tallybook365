@@ -16,16 +16,16 @@ const purchaseOrderSchema = new mongoose.Schema(
       type: String,
       required: [true, 'mother company is missing.'],
     },
-    client_id: {
+    vendor_id: {
       type: mongoose.Types.ObjectId,
-      ref: 'Client',
-      required: [true, 'client id is missing.'],
+      ref: 'Vendor',
+      required: [true, 'vendor id is missing.'],
     },
-    client_name: {
+    vendor_name: {
       type: String,
-      required: [true, 'client name is missing.'],
+      required: [true, 'vendor name is missing.'],
     },
-    client_address: {
+    vendor_address: {
       type: String,
     },
     title: {

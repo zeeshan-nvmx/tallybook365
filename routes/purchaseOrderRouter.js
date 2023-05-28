@@ -7,6 +7,8 @@ const {
   updatePurchaseOrder,
   getPurchaseOrderSerialNumber,
   getPurchaseOrdersByQuote,
+  getPurchaseOrdersByVendor,
+  getPurchaseOrdersByMonth,
 } = require('../controllers/purchaseOrderController')
 const { authenticateUser } = require('../utils/authorize-authenticate')
 const purchaseOrderRouter = express.Router()
@@ -14,7 +16,9 @@ const purchaseOrderRouter = express.Router()
 purchaseOrderRouter.get('/purchaseorders/getpurchaseorderserialnumber', authenticateUser, getPurchaseOrderSerialNumber)
 purchaseOrderRouter.post('/purchaseorders', authenticateUser, createPurchaseOrder)
 purchaseOrderRouter.get('/purchaseorders/getpurchaseordersbyquote/:id', authenticateUser, getPurchaseOrdersByQuote)
+purchaseOrderRouter.get('/purchaseorders/getpurchaseordersbyvendor/:id', authenticateUser, getPurchaseOrdersByVendor)
 purchaseOrderRouter.get('/purchaseorders', authenticateUser, getAllPurchaseOrders)
+purchaseOrderRouter.get('/purchaseorders/getpurchaseordersbymonth', authenticateUser, getPurchaseOrdersByMonth)
 purchaseOrderRouter.get('/purchaseorders/:id', authenticateUser, getPurchaseOrder)
 purchaseOrderRouter.delete('/purchaseorders/:id', authenticateUser, deletePurchaseOrder)
 purchaseOrderRouter.patch('/purchaseorders/:id', authenticateUser, updatePurchaseOrder)

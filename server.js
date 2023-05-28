@@ -12,6 +12,7 @@ require('dotenv').config()
 const authRouter = require('./routes/authRouter')
 const companyRouter = require('./routes/companyRouter')
 const clientRouter = require("./routes/clientRouter")
+const vendorRouter = require('./routes/vendorRouter')
 const quoteRouter = require("./routes/quoteRouter")
 const invoiceRouter = require("./routes/invoiceRouter")
 const chalanRouter = require('./routes/chalanRouter')
@@ -23,6 +24,7 @@ const connectDB = require('./utils/db')
 const errorHandler = require('./utils/error-handler')
 const { authenticateUser } = require('./utils/authorize-authenticate')
 const notFoundError = require('./utils/not-found-404')
+
 
 
 
@@ -42,6 +44,7 @@ app.get('/api/v1/showme', authenticateUser, (req, res) => {
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1', companyRouter)
 app.use("/api/v1", clientRouter)
+app.use("/api/v1", vendorRouter)
 app.use("/api/v1", quoteRouter)
 app.use("/api/v1", invoiceRouter)
 app.use("/api/v1", chalanRouter)

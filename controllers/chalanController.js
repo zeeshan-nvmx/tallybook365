@@ -90,6 +90,33 @@ async function getAllChalans(req, res) {
   }
 }
 
+async function getChalansByMonth(req, res) {
+  try {
+    const { month, year } = req.query
+
+    if (!month || !year) {
+      return res.status(400).json({ message: 'Both month and year are required query parameters.' })
+    }
+
+    // JavaScript counts months from 0 (January) to 11 (December),
+    // so we subtract 1 from the provided month to account for this.
+    let startDate = new Date(year, month - 1, 1)
+    let endDate = new Date(year, month, 0) // This date doesn't exist, so it will roll over to the first day of the next month
+
+    let chalans = await Chalan.find({
+      createdAt: {
+        $gte: startDate,
+        $lt: endDate,
+      },
+    })
+
+    res.json(chalans)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Server error' })
+  }
+}
+
 async function getChalan(req, res) {
   const { id } = req.params
   const {mother_company} = req.user
@@ -142,4 +169,4 @@ async function getChalanSerialNumber(req, res) {
   
 }
 
-module.exports = { createChalan, getAllChalans, getChalan, deleteChalan, updateChalan, getChalanSerialNumber }
+module.exports = { createChalan, getAllChalans, getChalansByMonth, getChalan, deleteChalan, updateChalan, getChalanSerialNumber }
