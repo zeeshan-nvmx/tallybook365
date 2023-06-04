@@ -58,7 +58,7 @@ async function getAllInvoices(req, res) {
   if (role === "admin") {
     const invoices = await Invoice.find({ mother_company: mother_company }).sort('-date').skip(skip).limit(limit)
     
-    if (invoices.length > 0) {
+    if (invoices) {
       return res.status(200).json(invoices)
     }
     throw new NotFoundError(`invoices not found ( role is ${role})`)
@@ -67,7 +67,7 @@ async function getAllInvoices(req, res) {
   if (role === "user") {
     const invoices = await Invoice.find({ user_id: user_id, mother_company: mother_company }).sort('-date').skip(skip).limit(limit)
     console.log(invoices, role)
-    if (invoices.length > 0) {
+    if (invoices) {
       return res.status(200).json(invoices)
     }
     throw new NotFoundError(`invoices not found ( role is ${role})`)

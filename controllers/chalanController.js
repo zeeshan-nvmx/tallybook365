@@ -75,7 +75,7 @@ async function getAllChalans(req, res) {
   if (role === "admin") {
     const chalans = await Chalan.find({mother_company: mother_company}).sort("-date").skip(skip).limit(limit)
 
-    if (chalans.length > 0) {
+    if (chalans) {
       return res.status(200).json(chalans)
     }
     throw new NotFoundError(`chalans not found ( role is ${role})`)
@@ -83,7 +83,7 @@ async function getAllChalans(req, res) {
 
   if (role === "user") {
     const chalans = await Chalan.find({ user_id: user_id, mother_company: mother_company }).sort('-date').skip(skip).limit(limit)
-    if (chalans.length > 0) {
+    if (chalans) {
       return res.status(200).json(chalans)
     }
     throw new NotFoundError(`chalans not found ( role is ${role})`)

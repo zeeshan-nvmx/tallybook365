@@ -75,7 +75,7 @@ async function getAllPurchaseOrders(req, res) {
   if (role === "admin") {
     const purchaseOrders = await PurchaseOrder.find({ mother_company: mother_company }).sort('-date').skip(skip).limit(limit)
 
-    if (purchaseOrders.length > 0) {
+    if (purchaseOrders) {
       return res.status(200).json(purchaseOrders)
     }
     throw new NotFoundError(`purchaseOrders not found ( role is ${role})`)
@@ -83,7 +83,7 @@ async function getAllPurchaseOrders(req, res) {
 
   if (role === "user") {
     const purchaseOrders = await PurchaseOrder.find({ user_id: user_id, mother_company: mother_company }).sort('-date').skip(skip).limit(limit)
-    if (purchaseOrders.length > 0) {
+    if (purchaseOrders) {
       return res.status(200).json(purchaseOrders)
     }
     throw new NotFoundError(`purchaseOrders not found ( role is ${role})`)
@@ -101,7 +101,7 @@ async function getPurchaseOrdersByMonth(req, res) {
     // JavaScript counts months from 0 (January) to 11 (December),
     // so we subtract 1 from the provided month to account for this.
     let startDate = new Date(year, month - 1, 1)
-    let endDate = new Date(year, month, 0) // This date doesn't exist, so it will roll over to the first day of the next month
+    let endDate = new Date(year, month, 0) 
 
     let purchaseOrders = await PurchaseOrder.find({
       createdAt: {
