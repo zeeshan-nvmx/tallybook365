@@ -78,6 +78,10 @@ const invoiceSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    total_advance: {
+      type: Number,
+      default: 0,
+    },
     t_and_c: {
       type: String,
     },
