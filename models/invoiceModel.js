@@ -62,7 +62,19 @@ const invoiceSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    advance: {
+    advance1: {
+      type: Number,
+      default: 0,
+    },
+    advance2: {
+      type: Number,
+      default: 0,
+    },
+    advance3: {
+      type: Number,
+      default: 0,
+    },
+    advance4: {
       type: Number,
       default: 0,
     },
