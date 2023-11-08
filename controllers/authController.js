@@ -6,14 +6,14 @@ const { createJWT } = require('../utils/jwt');
 const { hashPassword, comparePassword } = require('../utils/password')
 
 async function register(req, res) {
-  const { name, email, password, mother_company, role } = req.body;
+  const { name, phone, email, password, mother_company, role } = req.body;
   
-  const userExists = await User.findOne({ email })
+  const userExists = await User.findOne({ phone })
   if (userExists) {
-    throw new BadRequestError('User with this email is already signed up')
+    throw new BadRequestError('User with this phone number is already signed up')
   }
   
-  if (!name || !password || !email) {
+  if (!name || !password || !phone) {
     throw new BadRequestError("please provide all necessary fields")
   }
 
@@ -25,24 +25,24 @@ async function register(req, res) {
   }
 
   const hashedPassword = await hashPassword(password); 
-  const user = await User.create({ name, email, mother_company, role, password: hashedPassword, company }); 
+  const user = await User.create({ name, phone, email, mother_company, role, password: hashedPassword, company }); 
   
-  const tokenUser = { user_id: user._id, name: user.name, role: user.role, email: user.email, mother_company: user.mother_company, company }; 
+  const tokenUser = { user_id: user._id, name: user.name, phone: user.phone, role: user.role, email: user.email, mother_company: user.mother_company, company }; 
   const token = await createJWT(tokenUser);
   // await attachCookies(res, token)
   res.status(201).json({ token, msg: `New user under company: ${user.mother_company} successfully registered`, user: tokenUser }); 
 }
 
 async function login(req, res) {
-  const { email, password } = req.body;
+  const { phone, password } = req.body;
   
-  if (!email || !password) {
+  if (!phone || !password) {
     throw new BadRequestError("please provide all necessary fields")
   }
 
-  const storedUser = await User.findOne({ email });
+  const storedUser = await User.findOne({ phone });
   if (!storedUser) {
-    throw new BadRequestError("user with this email doesn't exist")
+    throw new BadRequestError("user with this phone doesn't exist")
   }
 
   const mother_company = storedUser.mother_company
@@ -52,7 +52,7 @@ async function login(req, res) {
     throw new BadRequestError("company doesn't exist")
   }
 
-  const tokenUser = { user_id: storedUser._id, name: storedUser.name, role: storedUser.role, mother_company: storedUser.mother_company, email: storedUser.email, company };
+  const tokenUser = { user_id: storedUser._id, name: storedUser.name, phone: storedUser.phone, role: storedUser.role, mother_company: storedUser.mother_company, email: storedUser.email, company };
   console.log(tokenUser);
   const isPasswordCorrect = await comparePassword(password, storedUser.password);
 
@@ -61,7 +61,7 @@ async function login(req, res) {
     // await attachCookies(res,token)
     return res.status(201).json({ token, msg: `user: ${storedUser.name} successfully logged in`, user: tokenUser});
   } else {
-    return res.status(401).json({ msg: 'your email or password is incorrect, please kindly check credentials before trying again' });
+    return res.status(401).json({ msg: 'your phone number or password is incorrect, please kindly check credentials before trying again' });
   }
 }
 
