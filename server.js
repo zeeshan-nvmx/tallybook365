@@ -7,6 +7,8 @@ const helmet = require("helmet")
 const xss = require("xss-clean")
 const mongoSanitize = require("express-mongo-sanitize")
 
+const port = process.env.PORT || 3000
+
 require('dotenv').config()
 
 const authRouter = require('./routes/authRouter')
@@ -54,7 +56,7 @@ app.use(notFoundError)
 app.use(errorHandler)
 
 const startServer = () => {
-  app.listen(8080, () => {
+  app.listen(port, () => {
     connectDB(process.env.MONGO_URL)
     console.log("server started on port 8080");
   })
