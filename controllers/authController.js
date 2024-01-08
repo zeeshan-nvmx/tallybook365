@@ -53,7 +53,7 @@ async function login(req, res) {
   }
 
   const tokenUser = { user_id: storedUser._id, name: storedUser.name, phone: storedUser.phone, role: storedUser.role, mother_company: storedUser.mother_company, email: storedUser.email, company, profile_image: storedUser.profile_image, signature: storedUser.signature };
-  console.log(tokenUser);
+  // console.log(tokenUser);
   const isPasswordCorrect = await comparePassword(password, storedUser.password);
 
   if (isPasswordCorrect) {
