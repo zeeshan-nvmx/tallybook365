@@ -15,8 +15,8 @@ async function authenticateUser(req, res, next) {
   try {
     const verifiedToken = await verifyToken(token)
     console.log(verifiedToken);
-    const { user_id, name, phone, role, email, mother_company, company } = verifiedToken
-    req.user = { user_id, name, phone, role, mother_company, email, company }
+    const { user_id, name, phone, role, email, mother_company, company, profile_image, signature } = verifiedToken
+    req.user = { user_id, name, phone, role, mother_company, email, company, profile_image, signature }
     next()
   } catch (error) {
     throw new UnauthenticatedError("Authentication token is invalid")
