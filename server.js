@@ -6,6 +6,7 @@ const cors = require("cors")
 const helmet = require("helmet")
 const xss = require("xss-clean")
 const mongoSanitize = require("express-mongo-sanitize")
+const mongoose = require("mongoose")
 
 const port = process.env.PORT || 3000
 
@@ -36,6 +37,7 @@ app.use(xss())
 app.use(mongoSanitize())
 app.use(morgan('dev'))
 app.use(express.json())
+
 
 
 app.get('/api/v1/showme', authenticateUser, (req, res) => {
