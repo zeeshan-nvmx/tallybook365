@@ -6,7 +6,7 @@ const { createJWT } = require('../utils/jwt');
 const { hashPassword, comparePassword } = require('../utils/password')
 
 async function register(req, res) {
-  const { name, phone, email, password, mother_company, role } = req.body;
+  const { name, phone, email, password, mother_company, role, designation, profile_image, signature } = req.body;
   
   const userExists = await User.findOne({ phone })
   if (userExists) {
@@ -25,9 +25,9 @@ async function register(req, res) {
   }
 
   const hashedPassword = await hashPassword(password); 
-  const user = await User.create({ name, phone, email, mother_company, role, password: hashedPassword, company }); 
+  const user = await User.create({ name, phone, email, mother_company, role, password: hashedPassword, company, designation, profile_image, signature }); 
   
-  const tokenUser = { user_id: user._id, name: user.name, phone: user.phone, role: user.role, email: user.email, mother_company: user.mother_company, company }; 
+  const tokenUser = { user_id: user._id, name: user.name, phone: user.phone, role: user.role, email: user.email, designation: user.designation, profile_image: user.profile_image, signature: user.signature, mother_company: user.mother_company, company }; 
   const token = await createJWT(tokenUser);
   // await attachCookies(res, token)
   res.status(201).json({ token, msg: `New user under company: ${user.mother_company} successfully registered`, user: tokenUser }); 
@@ -52,7 +52,7 @@ async function login(req, res) {
     throw new BadRequestError("company doesn't exist")
   }
 
-  const tokenUser = { user_id: storedUser._id, name: storedUser.name, phone: storedUser.phone, role: storedUser.role, mother_company: storedUser.mother_company, email: storedUser.email, company, profile_image: storedUser.profile_image, signature: storedUser.signature };
+  const tokenUser = { user_id: storedUser._id, name: storedUser.name, phone: storedUser.phone, role: storedUser.role, mother_company: storedUser.mother_company, email: storedUser.email, company, profile_image: storedUser.profile_image, signature: storedUser.signature, designation: storedUser.designation };
   
   const isPasswordCorrect = await comparePassword(password, storedUser.password);
 

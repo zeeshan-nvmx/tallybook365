@@ -73,10 +73,13 @@ const UserSchema = new mongoose.Schema({
     default: 'user',
   },
   signature: {
-    type: String, 
+    type: String,
   },
   profile_image: {
-    type: String, 
+    type: String,
+  },
+  designation: {
+    type: String,
   },
 })
 
