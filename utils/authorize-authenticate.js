@@ -14,7 +14,6 @@ async function authenticateUser(req, res, next) {
 
   try {
     const verifiedToken = await verifyToken(token)
-    console.log(verifiedToken);
     const { user_id, name, phone, role, email, mother_company, company, profile_image, signature } = verifiedToken
     req.user = { user_id, name, phone, role, mother_company, email, company, profile_image, signature }
     next()
@@ -26,8 +25,7 @@ async function authenticateUser(req, res, next) {
 
 function authorizeUser(...roles){
   return function (req, res, next) {
-    console.log(roles)
-    console.log(req.user)
+   
     if (!roles.includes(req.user.role)) {
       throw new UnauthorizedError('Unauthorized to access this route')
     }
