@@ -48,6 +48,7 @@ const UserSchema = new mongoose.Schema({
   phone: {
     type: String,
     required: [true, 'please provide a phone number'],
+    unique: [true, 'phone number needs to be unique'],
     minlength: 11,
   },
   email: {
