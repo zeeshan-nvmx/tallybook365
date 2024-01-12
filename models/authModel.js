@@ -82,6 +82,14 @@ const UserSchema = new mongoose.Schema({
   designation: {
     type: String,
   },
+  otp: {
+    type: Number,
+    default: null,
+  },
+  otpExpires: {
+    type: Date,
+    default: null,
+  },
 })
 
 module.exports = mongoose.model('User', UserSchema)
