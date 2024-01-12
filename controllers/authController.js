@@ -185,7 +185,7 @@ async function login(req, res) {
     throw new BadRequestError('Invalid credentials')
   }
 
-  const tokenUser = { user_id: storedUser._id, name: storedUser.name, phone: storedUser.phone, role: storedUser.role, email: storedUser.email }
+  const tokenUser = { user_id: storedUser._id, name: storedUser.name, phone: storedUser.phone, role: storedUser.role, email: storedUser.email, designation: storedUser.designation, profile_image: storedUser.profile_image, signature: storedUser.signature, mother_company: storedUser.mother_company, company: storedUser.company }
   const token = await createJWT(tokenUser)
   res.status(200).json({ token, msg: `User: ${storedUser.name} successfully logged in`, user: tokenUser })
 }
