@@ -1,9 +1,99 @@
 const BadRequestError = require("../errors/bad-request")
 const NotFoundError = require("../errors/not-found")
+const z = require("zod")
 const Quote = require("../models/quoteModel")
+const { validateRequestFields, generateDefaultErrorMessage } = require('../utils/validations')
+
+// const createQuoteSchema = z.object({
+//   user_id: z.string(),
+//   mother_company: z.string(),
+//   invoice_id: z.string().optional(),
+//   chalan_id: z.string().optional(),
+//   purchaseOrder_id: z.string().optional(),
+//   client_id: z.string(),
+//   client_name: z.string(),
+//   client_address: z.string(),
+//   title: z.string(),
+//   job_no: z.string(),
+//   date: z.date().optional(), 
+//   items: z.array(
+//     z.object({
+//       particulars: z.string(),
+//       details: z.string(),
+//       quantity: z.string(),
+//       day: z.string(),
+//       unitPrice: z.string(),
+//       totalPrice: z.number(),
+//     })
+//   ),
+//   vat: z.number().optional(),
+//   asf: z.number().optional(),
+//   t_and_c: z.string(),
+//   bank_account: z.string().optional(),
+//   bank_name_address: z.string().optional(),
+//   swift: z.string().optional(),
+//   routing_no: z.string().optional(),
+//   brand: z.string().optional(),
+//   job_type: z.string(),
+//   grand_total: z.number(),
+// })
+
+const createQuoteSchema = z.object({
+  user_id: z.string().refine((val) => val.length > 0, { message: 'User ID is required' }),
+  mother_company: z.string().refine((val) => val.length > 0, { message: 'Mother company is required' }),
+  invoice_id: z.string().optional(),
+  chalan_id: z.string().optional(),
+  purchaseOrder_id: z.string().optional(),
+  client_id: z.string().refine((val) => val.length > 0, { message: 'Client ID is required' }),
+  client_name: z.string().refine((val) => val.length > 0, { message: 'Client name is required' }),
+  client_address: z.string().refine((val) => val.length > 0, { message: 'Client address is required' }),
+  title: z.string().refine((val) => val.length > 0, { message: 'Title is required' }),
+  job_no: z.string().refine((val) => val.length > 0, { message: 'Job number is required' }),
+  date: z.date().optional(),
+  items: z.array(
+    z.object({
+      particulars: z.string().refine((val) => val.length > 0, { message: 'Particulars are required' }),
+      details: z.string().refine((val) => val.length > 0, { message: 'Details are required' }),
+      quantity: z.string().refine((val) => val.length > 0, { message: 'Quantity is required' }),
+      day: z.string().refine((val) => val.length > 0, { message: 'Day is required' }),
+      unitPrice: z.string().refine((val) => val.length > 0, { message: 'Unit price is required' }),
+      totalPrice: z.number().refine((val) => val >= 0, { message: 'Total price is required and must be a number' }),
+    })
+  ),
+  vat: z.number().optional(),
+  asf: z.number().optional(),
+  t_and_c: z.string().refine((val) => val.length > 0, { message: 'Terms and conditions are required' }),
+  bank_account: z.string().optional(),
+  bank_name_address: z.string().optional(),
+  swift: z.string().optional(),
+  routing_no: z.string().optional(),
+  brand: z.string().optional(),
+  job_type: z.string().refine((val) => val.length > 0, { message: 'Job type is required' }),
+  grand_total: z.number().refine((val) => val >= 0, { message: 'Grand total is required and must be a number' }),
+})
+
+
 
 async function createQuote(req, res) {
   
+  validateRequestFields(req.body, [
+    'user_id',
+    'mother_company',
+    'client_id',
+    'client_name',
+    'client_address',
+    'title',
+    'job_no',
+    'items',
+    'job_type',
+    'grand_total',
+  ])
+
+  const validationResult = createQuoteSchema.safeParse(req.body)
+  if (!validationResult.success) {
+    throw new BadRequestError(generateDefaultErrorMessage(validationResult.error.issues))
+  }
+
   const {
     user_id,
     mother_company,
@@ -26,8 +116,8 @@ async function createQuote(req, res) {
     routing_no,
     brand,
     job_type,
-    grand_total
-  } = req.body
+    grand_total,
+  } = validationResult.data
 
   const quote = await Quote.create({
     user_id,
