@@ -60,7 +60,7 @@ app.use(errorHandler)
 const startServer = () => {
   app.listen(port, () => {
     connectDB(process.env.MONGO_URL)
-    console.log("server started on port 8080");
+    console.log(`server started on port ${port}`);
   })
 }
 

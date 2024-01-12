@@ -84,6 +84,18 @@ const Company = require('../models/companyModel')
 const { createJWT } = require('../utils/jwt')
 const { hashPassword, comparePassword } = require('../utils/password')
 
+function validateRequestFields(reqBody, requiredFields) {
+  const missingFields = requiredFields.filter(field => !reqBody[field]);
+  if (missingFields.length > 0) {
+    throw new BadRequestError(`Missing fields: ${missingFields.join(', ')}`);
+  }
+}
+
+// Helper function to generate default error message
+const generateDefaultErrorMessage = (errors) => {
+  return errors.map(error => error.message).join(", ");
+};
+
 // Zod Schemas
 const userSchema = z.object({
   name: z.string().min(1, 'Please provide a name'),
@@ -114,9 +126,12 @@ const validateOTPAndResetPasswordSchema = z.object({
 
 // Controller Functions
 async function register(req, res) {
+
+  validateRequestFields(req.body, ['name', 'phone', 'email', 'password', 'mother_company', 'role', 'designation', 'profile_image', 'signature'])
+
   const validationResult = userSchema.safeParse(req.body)
-  if (!validationResult.success) {
-    throw new BadRequestError(validationResult.error.message)
+   if (!validationResult.success) {
+    throw new BadRequestError(generateDefaultErrorMessage(validationResult.error.issues))
   }
 
   const { name, phone, email, password, mother_company, role, designation, profile_image, signature } = validationResult.data
@@ -151,9 +166,12 @@ async function register(req, res) {
 }
 
 async function login(req, res) {
+
+  validateRequestFields(req.body, ['phone', 'password'])
+
   const validationResult = loginSchema.safeParse(req.body)
   if (!validationResult.success) {
-    throw new BadRequestError(validationResult.error.message)
+    throw new BadRequestError(generateDefaultErrorMessage(validationResult.error.issues))
   }
 
   const { phone, password } = validationResult.data
@@ -177,9 +195,12 @@ async function logout(req, res) {
 }
 
 async function requestPasswordReset(req, res) {
+
+  validateRequestFields(req.body, ['phone'])
+
   const validationResult = resetPasswordRequestSchema.safeParse(req.body)
   if (!validationResult.success) {
-    throw new BadRequestError(validationResult.error.message)
+    throw new BadRequestError(generateDefaultErrorMessage(validationResult.error.issues))
   }
 
   const { phone } = validationResult.data
@@ -208,9 +229,13 @@ async function requestPasswordReset(req, res) {
 }
 
 async function validateOTPAndResetPassword(req, res) {
+
+  validateRequestFields(req.body, ['phone', 'otp', 'newPassword'])
+
   const validationResult = validateOTPAndResetPasswordSchema.safeParse(req.body)
+  
   if (!validationResult.success) {
-    throw new BadRequestError(validationResult.error.message)
+    throw new BadRequestError(generateDefaultErrorMessage(validationResult.error.issues))
   }
 
   const { phone, otp, newPassword } = validationResult.data
