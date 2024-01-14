@@ -1,15 +1,37 @@
-# Invoicing and quotation management solution for digital agencies.
+# Invoicing and Quotation Management Solution for Digital Agencies
 
-### steps to run the api:
+A comprehensive solution designed to streamline the management of invoicing and quotations for digital agencies.
 
-1. clone the repository
-2. cd into the directory
-3. run 'npm install'
-4. create a .env file in the root and put your mongodb url, JWT secret and expiry time in the .env file in this format
-   - MONGO_URL
-   - JWT_SECRET
-   - EXPIRY
-   - BDBULKSMS_TOKEN (Assuming you are using the bd bulk sms service)
+## Steps to Run the API
+
+1. **Clone the Repository**
+   - Execute the following command to clone the repository:
+     ```
+     git clone [repository URL]
+     ```
+
+2. **Navigate to the Directory**
+   - Change into the project directory with:
+     ```
+     cd [directory name]
+     ```
+
+3. **Install Dependencies**
+   - Run the following command to install necessary dependencies:
+     ```
+     npm install
+     ```
+
+4. **Environment Setup**
+   - Create a `.env` file in the root directory and add the following configurations:
+     ```
+     MONGO_URL=[Your MongoDB URL]
+     JWT_SECRET=[Your JWT Secret]
+     EXPIRY=[Your JWT Expiry Time]
+     BDBULKSMS_TOKEN=[Your BD Bulk SMS Service Token]
+     ```
+   - Replace the placeholders (e.g., `[Your MongoDB URL]`) with your actual configuration values.
+
 
 # Authentication API Documentation
 
