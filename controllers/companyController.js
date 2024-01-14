@@ -5,18 +5,9 @@ const Invoice = require('../models/invoiceModel')
 const Quote = require('../models/quoteModel')
 
 async function createCompany(req, res) {
-  const { mother_company, company_remaining_amount, mother_company_logo, mother_company_image, mother_company_default_bank_account, mother_company_default_bank_name_address, mother_company_default_routing_no, mother_company_default_bank_routing_no} = req.body
+  const { mother_company, company_remaining_amount, mother_company_logo, mother_company_image, mother_company_default_bank_account, mother_company_default_bank_name_address, mother_company_default_routing_no, mother_company_default_bank_routing_no } = req.body
 
-  const company = await Company.create({
-    mother_company,
-    company_remaining_amount,
-    mother_company_logo,
-    mother_company_image,
-    mother_company_default_bank_account,
-    mother_company_default_bank_name_address,
-    mother_company_default_routing_no,
-    mother_company_default_bank_routing_no,
-  })
+  const company = await Company.create({ mother_company, company_remaining_amount, mother_company_logo, mother_company_image, mother_company_default_bank_account, mother_company_default_bank_name_address, mother_company_default_routing_no, mother_company_default_bank_routing_no })
 
   if (company) {
     console.log(company)
@@ -24,11 +15,9 @@ async function createCompany(req, res) {
   } else {
     throw new BadRequestError('failed to create new company, try again')
   }
-
 }
 
 async function getQuoteInvoiceSixMonthTotal(req, res) {
-  
   const getMonthYearString = (date) => {
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     return `${monthNames[date.getMonth()]} ${date.getFullYear()}`
@@ -59,43 +48,43 @@ async function getQuoteInvoiceSixMonthTotal(req, res) {
   }
 
   const getLastSixMonthsDues = async () => {
-  const currentDate = new Date();
-  const results = [];
+    const currentDate = new Date()
+    const results = []
 
-  for (let i = 6; i > 0; i--) {
-    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
-    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - i + 1, 0);
-    const monthYearString = getMonthYearString(startOfMonth);
+    for (let i = 6; i > 0; i--) {
+      const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1)
+      const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - i + 1, 0)
+      const monthYearString = getMonthYearString(startOfMonth)
 
-    const { totalQuoteDues, totalInvoiceDues } = await fetchMonthlyDues(startOfMonth, endOfMonth);
+      const { totalQuoteDues, totalInvoiceDues } = await fetchMonthlyDues(startOfMonth, endOfMonth)
 
-    const resultObj = {
-      month: monthYearString,
-      totalQuotedAmount: totalQuoteDues,
-      totalInvoicedAmount: totalInvoiceDues,
+      const resultObj = {
+        month: monthYearString,
+        totalQuotedAmount: totalQuoteDues,
+        totalInvoicedAmount: totalInvoiceDues,
+      }
+
+      results.push(resultObj)
     }
 
-    results.push(resultObj);
+    return results
   }
 
-  return results;
-  }
-  
   try {
-    const currentDate = new Date();
-    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-    const currentMonthDues = await fetchMonthlyDues(startOfMonth, endOfMonth);
-    const runningMonthQuoteTotal = { "currentMonth" : getMonthYearString(startOfMonth), "totalQuotedAmount" : currentMonthDues.totalQuoteDues };
-    const runningMonthInvoiceTotal = { "currentMonth" : getMonthYearString(startOfMonth), "totalInvoicedAmount" : currentMonthDues.totalInvoiceDues };
+    const currentDate = new Date()
+    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
+    const currentMonthDues = await fetchMonthlyDues(startOfMonth, endOfMonth)
+    const runningMonthQuoteTotal = { currentMonth: getMonthYearString(startOfMonth), totalQuotedAmount: currentMonthDues.totalQuoteDues }
+    const runningMonthInvoiceTotal = { currentMonth: getMonthYearString(startOfMonth), totalInvoicedAmount: currentMonthDues.totalInvoiceDues }
 
-    const lastSixMonthsDues = await getLastSixMonthsDues();
+    const lastSixMonthsDues = await getLastSixMonthsDues()
     // lastSixMonthsDues.forEach((result) => console.log(result));
 
-    res.status(200).json({runningMonthQuoteTotal, runningMonthInvoiceTotal, lastSixMonthsDues})
+    res.status(200).json({ runningMonthQuoteTotal, runningMonthInvoiceTotal, lastSixMonthsDues })
   } catch (error) {
-    console.error('Error fetching dues:', error);
+    console.error('Error fetching dues:', error)
   }
-};
+}
 
-module.exports = { createCompany, getQuoteInvoiceSixMonthTotal}
+module.exports = { createCompany, getQuoteInvoiceSixMonthTotal }
