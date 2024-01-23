@@ -4,28 +4,7 @@ const Chalan = require("../models/chalanModel")
 const Quote = require("../models/quoteModel")
 
 async function createChalan(req, res) {
-  const {
-    user_id,
-    quote_id,
-    mother_company,
-    client_id,
-    client_name,
-    client_address,
-    title,
-    job_no,
-    date,
-    items,
-    vat,
-    asf,
-    t_and_c,
-    bank_account,
-    bank_name_address,
-    swift,
-    routing_no,
-    brand,
-    job_type,
-    grand_total,
-  } = req.body
+  const { user_id, quote_id, mother_company, client_id, client_name, client_address, title, job_no, date, items, vat, asf, t_and_c, bank_account, bank_name_address, swift, routing_no, brand, job_type, sub_total, grand_total } = req.body
 
   const chalan = await Chalan.create({
     user_id,
@@ -47,6 +26,7 @@ async function createChalan(req, res) {
     routing_no,
     brand,
     job_type,
+    sub_total,
     grand_total,
   })
 

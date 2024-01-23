@@ -76,6 +76,10 @@ const purchaseOrderSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'grand total value is missing'],
     },
+    sub_total: {
+      type: Number,
+      required: [true, 'sub total value is missing'],
+    },
   },
   { timestamps: true }
 )

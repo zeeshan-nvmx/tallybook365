@@ -25,6 +25,7 @@ async function createPurchaseOrder(req, res) {
     routing_no,
     brand,
     job_type,
+    sub_total,
     grand_total,
   } = req.body
 
@@ -48,6 +49,7 @@ async function createPurchaseOrder(req, res) {
     routing_no,
     brand,
     job_type,
+    sub_total,
     grand_total,
   })
 

@@ -80,9 +80,9 @@ async function createQuote(req, res) {
   //   throw new BadRequestError(generateDefaultErrorMessage(validationResult.error.issues))
   // }
 
-  const { user_id, mother_company, invoice_id, chalan_id, purchaseOrder_id, client_id, client_name, client_address, title, job_no, date, items, vat, asf, t_and_c, bank_account, bank_name_address, swift, routing_no, brand, job_type, grand_total } = req.body
+  const { user_id, mother_company, invoice_id, chalan_id, purchaseOrder_id, client_id, client_name, client_address, title, job_no, date, items, vat, asf, t_and_c, bank_account, bank_name_address, swift, routing_no, brand, job_type, sub_total, grand_total } = req.body
 
-  const quote = await Quote.create({ user_id, mother_company, invoice_id, chalan_id, purchaseOrder_id, client_id, client_name, client_address, title, job_no, date, items, vat, asf, t_and_c, bank_account, bank_name_address, swift, routing_no, brand, job_type, grand_total })
+  const quote = await Quote.create({ user_id, mother_company, invoice_id, chalan_id, purchaseOrder_id, client_id, client_name, client_address, title, job_no, date, items, vat, asf, t_and_c, bank_account, bank_name_address, swift, routing_no, brand, job_type, sub_total, grand_total })
 
   if (quote) {
     console.log(quote)

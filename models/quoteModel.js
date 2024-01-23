@@ -13,15 +13,15 @@ const quoteSchema = new mongoose.Schema(
     },
     invoice_id: {
       type: mongoose.Types.ObjectId,
-      ref: 'Invoice'
+      ref: 'Invoice',
     },
     chalan_id: {
       type: mongoose.Types.ObjectId,
-      ref: 'Chalan'
+      ref: 'Chalan',
     },
     purchaseOrder_id: {
       type: [mongoose.Types.ObjectId],
-      ref: 'PurchaseOrder'
+      ref: 'PurchaseOrder',
     },
     client_id: {
       type: mongoose.Types.ObjectId,
@@ -84,6 +84,12 @@ const quoteSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'grand total value is missing'],
     },
-  }, { timestamps: true })
+    sub_total: {
+      type: Number,
+      required: [true, 'sub total value is missing'],
+    },
+  },
+  { timestamps: true }
+)
 
 module.exports = mongoose.model("Quote", quoteSchema)
