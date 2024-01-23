@@ -6,8 +6,8 @@ const authRouter = express.Router()
 authRouter.post('/register', authenticateUser,  authorizeUser("sass-admin", "admin") , register)
 authRouter.post('/login', login)
 
-authRouter.post('/request-otp', authenticateUser, requestPasswordReset)
-authRouter.post('/reset-password', authenticateUser, validateOTPAndResetPassword)
+authRouter.post('/request-otp', requestPasswordReset)
+authRouter.post('/reset-password', validateOTPAndResetPassword)
 
 authRouter.get('/logout', logout)
 
