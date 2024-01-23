@@ -19,14 +19,74 @@ async function createCompany(req, res) {
 
  // Replace with your actual Quote model path
 
+// async function getCurrentMonthQuoteTotal(req, res) {
+//   const startOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+//   const endOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+
+//   const aggregationPipeline = [
+//     {
+//       $match: {
+//         createdAt: { $gte: startOfCurrentMonth, $lte: endOfCurrentMonth },
+//       },
+//     },
+//     {
+//       $group: {
+//         _id: null,
+//         totalQuotedAmount: { $sum: '$grand_total' },
+//       },
+//     },
+//   ]
+
+//   try {
+//     const quoteResults = await Quote.aggregate(aggregationPipeline).exec()
+//     const totalQuotedAmount = quoteResults.length ? quoteResults[0].totalQuotedAmount : 0
+
+//     res.status(200).json({ totalQuotedAmount })
+//   } catch (error) {
+//     console.error('Error fetching current month quote total:', error)
+//     res.status(500).json({ error: 'Internal server error' })
+//   }
+// }
+
+
+// async function getCurrentMonthInvoiceTotal(req, res) {
+//   const startOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+//   const endOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+
+//   const aggregationPipeline = [
+//     {
+//       $match: {
+//         createdAt: { $gte: startOfCurrentMonth, $lte: endOfCurrentMonth },
+//       },
+//     },
+//     {
+//       $group: {
+//         _id: null,
+//         totalInvoicedAmount: { $sum: '$grand_total' },
+//       },
+//     },
+//   ]
+
+//   try {
+//     const invoiceResults = await Invoice.aggregate(aggregationPipeline).exec()
+//     const totalInvoicedAmount = invoiceResults.length ? invoiceResults[0].totalInvoicedAmount : 0
+
+//     res.status(200).json({ totalInvoicedAmount })
+//   } catch (error) {
+//     console.error('Error fetching current month invoice total:', error)
+//     res.status(500).json({ error: 'Internal server error' })
+//   }
+// }
+
 async function getCurrentMonthQuoteTotal(req, res) {
-  const startOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-  const endOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+  const { month, year } = req.query
+  const startOfMonth = new Date(year, month - 1, 1)
+  const endOfMonth = new Date(year, month, 0)
 
   const aggregationPipeline = [
     {
       $match: {
-        createdAt: { $gte: startOfCurrentMonth, $lte: endOfCurrentMonth },
+        createdAt: { $gte: startOfMonth, $lte: endOfMonth },
       },
     },
     {
@@ -43,20 +103,20 @@ async function getCurrentMonthQuoteTotal(req, res) {
 
     res.status(200).json({ totalQuotedAmount })
   } catch (error) {
-    console.error('Error fetching current month quote total:', error)
+    console.error('Error fetching quote total:', error)
     res.status(500).json({ error: 'Internal server error' })
   }
 }
 
-
 async function getCurrentMonthInvoiceTotal(req, res) {
-  const startOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-  const endOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+  const { month, year } = req.query
+  const startOfMonth = new Date(year, month - 1, 1)
+  const endOfMonth = new Date(year, month, 0)
 
   const aggregationPipeline = [
     {
       $match: {
-        createdAt: { $gte: startOfCurrentMonth, $lte: endOfCurrentMonth },
+        createdAt: { $gte: startOfMonth, $lte: endOfMonth },
       },
     },
     {
@@ -73,10 +133,11 @@ async function getCurrentMonthInvoiceTotal(req, res) {
 
     res.status(200).json({ totalInvoicedAmount })
   } catch (error) {
-    console.error('Error fetching current month invoice total:', error)
+    console.error('Error fetching invoice total:', error)
     res.status(500).json({ error: 'Internal server error' })
   }
 }
+
 
 
 async function getQuoteInvoiceSixMonthTotal(req, res) {
