@@ -2,6 +2,10 @@ const BadRequestError = require('../errors/bad-request')
 const NotFoundError = require('../errors/not-found')
 const z = require('zod')
 const Quote = require('../models/quoteModel')
+const Chalan = require('../models/chalanModel')
+const Invoice = require('../models/invoiceModel') 
+const PurchaseOrder = require('../models/purchaseOrderModel') 
+
 const { validateRequestFields, generateDefaultErrorMessage } = require('../utils/validations')
 
 // const createQuoteSchema = z.object({
@@ -166,16 +170,35 @@ async function updateQuote(req, res) {
   throw new BadRequestError("couldn't update quote, sorry :(")
 }
 
-async function deleteQuote(req, res) {
-  const { id } = req.params
-  console.log(typeof id)
-  const quote = await Quote.findOneAndDelete({ _id: id })
+async function deleteQuote (req, res) {
+  try {
+    const quoteId = req.params.id
+    const quote = await Quote.findOne({ _id: quoteId })
+    if (!quote) {
+      return res.status(404).send('Quote not found')
+    }
 
-  if (quote) {
-    return res.status(200).json({ msg: 'quote deleted', data: quote })
+    // Deletes the related chalan, invoice, and purchase orders
+    if (quote.chalan_id) {
+      await Chalan.findOneAndDelete({ _id: quote.chalan_id })
+    }
+    if (quote.invoice_id) {
+      await Invoice.findOneAndDelete({ _id: quote.invoice_id })
+    }
+    if (quote.purchaseOrder_id && quote.purchaseOrder_id.length) {
+      await PurchaseOrder.deleteMany({ _id: { $in: quote.purchaseOrder_id } })
+    }
+
+    // Deletes the quote itself
+    await Quote.findOneAndDelete({ _id: quoteId })
+
+    res.status(200).send('Quote and related entities deleted successfully')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Error deleting quote')
   }
-  throw new NotFoundError('quote with particular id was not found')
 }
+
 
 async function getQuoteSerialNumber(req, res) {
   const { mother_company } = req.user
@@ -194,3 +217,14 @@ async function getQuoteSerialNumber(req, res) {
 }
 
 module.exports = { createQuote, getAllQuotes, getQuotesByMonth, getQuote, deleteQuote, updateQuote, getQuoteSerialNumber }
+
+// async function deleteQuote(req, res) {
+//   const { id } = req.params
+//   console.log(typeof id)
+//   const quote = await Quote.findOneAndDelete({ _id: id })
+
+//   if (quote) {
+//     return res.status(200).json({ msg: 'quote deleted', data: quote })
+//   }
+//   throw new NotFoundError('quote with particular id was not found')
+// }
