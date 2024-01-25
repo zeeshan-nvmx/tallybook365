@@ -130,15 +130,23 @@ async function updateInvoice(req, res) {
 }
 
 async function deleteInvoice(req, res) {
-  const { id } = req.params
-  const { mother_company } = req.user
-  
-  const invoice = await Invoice.findOneAndDelete({ _id: id, mother_company: mother_company })
+  try {
+    const invoiceId = req.params.id
+    const deletedInvoice = await Invoice.findOneAndDelete({ _id: invoiceId })
 
-  if (invoice) {
-    return res.status(200).json({ msg: "invoice deleted", data: invoice })
+    if (deletedInvoice) {
+      const quote = await Quote.findOne({ invoice_id: invoiceId })
+      if (quote) {
+        quote.invoice_id = null
+        await quote.save()
+      }
+    }
+
+    res.status(200).send('Invoice deleted successfully')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Error deleting invoice')
   }
-  throw new NotFoundError("invoice with particular id was not found")
 }
 
 async function getInvoiceSerialNumber(req, res) {
@@ -158,3 +166,15 @@ async function getInvoiceSerialNumber(req, res) {
 }
 
 module.exports = { createInvoice, getAllInvoices, getInvoiceByMonth, getInvoice, deleteInvoice, updateInvoice, getInvoiceSerialNumber }
+
+// async function deleteInvoice(req, res) {
+// //   const { id } = req.params
+// //   const { mother_company } = req.user
+  
+// //   const invoice = await Invoice.findOneAndDelete({ _id: id, mother_company: mother_company })
+
+// //   if (invoice) {
+// //     return res.status(200).json({ msg: "invoice deleted", data: invoice })
+// //   }
+// //   throw new NotFoundError("invoice with particular id was not found")
+// // }

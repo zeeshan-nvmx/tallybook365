@@ -122,15 +122,23 @@ async function updateChalan(req, res) {
 }
 
 async function deleteChalan(req, res) {
-  const { id } = req.params
-  const { mother_company } = req.user
+  try {
+    const chalanId = req.params.id
+    const deletedChalan = await Chalan.findOneAndDelete({ _id: chalanId })
 
-  const chalan = await Chalan.findOneAndDelete({ _id: id, mother_company: mother_company })
+    if (deletedChalan) {
+      const quote = await Quote.findOne({ chalan_id: chalanId })
+      if (quote) {
+        quote.chalan_id = null
+        await quote.save()
+      }
+    }
 
-  if (chalan) {
-    return res.status(200).json({ msg: "chalan deleted", data: chalan })
+    res.status(200).send('Chalan deleted successfully')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Error deleting chalan')
   }
-  throw new NotFoundError("chalan with particular id was not found")
 }
 
 async function getChalanSerialNumber(req, res) {
@@ -150,3 +158,16 @@ async function getChalanSerialNumber(req, res) {
 }
 
 module.exports = { createChalan, getAllChalans, getChalansByMonth, getChalan, deleteChalan, updateChalan, getChalanSerialNumber }
+
+
+// async function deleteChalan(req, res) {
+//   const { id } = req.params
+//   const { mother_company } = req.user
+
+//   const chalan = await Chalan.findOneAndDelete({ _id: id, mother_company: mother_company })
+
+//   if (chalan) {
+//     return res.status(200).json({ msg: 'chalan deleted', data: chalan })
+//   }
+//   throw new NotFoundError('chalan with particular id was not found')
+// }

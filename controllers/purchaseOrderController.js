@@ -143,15 +143,24 @@ async function updatePurchaseOrder(req, res) {
   throw new BadRequestError("couldn't update purchaseOrder, sorry :(")
 }
 
-async function deletePurchaseOrder(req, res) {
-  const { id } = req.params
-  const { mother_company } = req.user
-  const purchaseOrder = await PurchaseOrder.findOneAndDelete({ _id: id, mother_company: mother_company })
+async function deletePurchaseOrder (req, res) {
+  try {
+    const purchaseOrderId = req.params.id
+    const deletedPurchaseOrder = await PurchaseOrder.findOneAndDelete({ _id: purchaseOrderId })
 
-  if (purchaseOrder) {
-    return res.status(200).json({ msg: "purchaseOrder deleted", data: purchaseOrder })
+    if (deletedPurchaseOrder) {
+      const quotes = await Quote.find({ purchaseOrder_id: purchaseOrderId })
+      quotes.forEach(async (quote) => {
+        quote.purchaseOrder_id = quote.purchaseOrder_id.filter((id) => id.toString() !== purchaseOrderId)
+        await quote.save()
+      })
+    }
+
+    res.status(200).send('Purchase Order deleted successfully')
+  } catch (error) {
+    console.error(error)
+    res.status(500).send('Error deleting purchase order')
   }
-  throw new NotFoundError("purchaseOrder with particular id was not found")
 }
 
 async function getPurchaseOrderSerialNumber(req, res) {
@@ -204,3 +213,15 @@ module.exports = {
   getPurchaseOrdersByQuote,
   getPurchaseOrdersByVendor,
 }
+
+
+// async function deletePurchaseOrder(req, res) {
+//   const { id } = req.params
+//   const { mother_company } = req.user
+//   const purchaseOrder = await PurchaseOrder.findOneAndDelete({ _id: id, mother_company: mother_company })
+
+//   if (purchaseOrder) {
+//     return res.status(200).json({ msg: "purchaseOrder deleted", data: purchaseOrder })
+//   }
+//   throw new NotFoundError("purchaseOrder with particular id was not found")
+// }
