@@ -97,6 +97,9 @@ const invoiceSchema = new mongoose.Schema(
     routing_no: {
       type: String,
     },
+    po_number: {
+      type: String,
+    },
     grand_total: {
       type: Number,
       required: [true, 'grand total value is missing'],

@@ -4,7 +4,7 @@ const Invoice = require("../models/invoiceModel")
 const Quote = require('../models/quoteModel')
 
 async function createInvoice(req, res) {
-  const { user_id, quote_id, mother_company, client_id, client_name, client_address, title, job_no, date, items, vat, asf, advance1, advance2, advance3, advance4, total_advance, due, sub_total, grand_total, t_and_c, bank_account, bank_name_address, swift, routing_no, brand, job_type } = req.body
+  const { user_id, quote_id, mother_company, client_id, client_name, client_address, title, job_no, date, items, vat, asf, advance1, advance2, advance3, advance4, total_advance, due, po_number, sub_total, grand_total, t_and_c, bank_account, bank_name_address, swift, routing_no, brand, job_type } = req.body
 
   const invoice = await Invoice.create({
     user_id,
@@ -32,11 +32,11 @@ async function createInvoice(req, res) {
     routing_no,
     brand,
     job_type,
+    po_number,
     sub_total,
     grand_total,
   })
 
-  console.log(invoice)
 
   if (invoice) {
     
