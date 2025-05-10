@@ -20,6 +20,7 @@ const quoteRouter = require("./routes/quoteRouter")
 const invoiceRouter = require("./routes/invoiceRouter")
 const chalanRouter = require('./routes/chalanRouter')
 const purchaseOrderRouter = require('./routes/purchaseOrderRouter')
+const userManagementRouter = require('./routes/userManagementRouter')
 
 
 
@@ -53,6 +54,7 @@ app.use("/api/v1", quoteRouter)
 app.use("/api/v1", invoiceRouter)
 app.use("/api/v1", chalanRouter)
 app.use("/api/v1", purchaseOrderRouter)
+app.use('/api/v1/user-management', userManagementRouter)
 
 app.use(notFoundError)
 app.use(errorHandler)
